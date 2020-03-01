@@ -11,6 +11,6 @@ if gpu and screen then
   gpu.set(1, 2, "System memory: " .. tostring(math.floor(computer.totalMemory()/1024)) .. "k")
   gpu.set(1, 3, "OC-WebStore cannot yet be run on a standard computer.")
   while true do
-    computerm.pullSignal()
+    computer.pullSignal()
   end
 end
