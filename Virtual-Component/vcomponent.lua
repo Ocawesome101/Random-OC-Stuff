@@ -8,7 +8,6 @@ local ps = computer.pushSignal
 
 function component.create(componentAPI)
   checkArg(1, componentAPI, "table")
-  kernel.log("vcomponent: Adding component: type " .. componentAPI.type .. ", addr " .. componentAPI.address)
   vcomponents[componentAPI.address] = componentAPI
   ps("component_added", componentAPI.address, componentAPI.type)
 end
@@ -41,7 +40,6 @@ function component.list(ctype, match)
   local function c()
     if a[i] then
       i = i + 1
---      kernel.log(a[i - 1] .. " " .. (matches[a[i - 1]] or o[a[i - 1]]))
       return a[i - 1], (matches[a[i - 1]] or o[a[i - 1]])
     else
       return nil
@@ -54,7 +52,6 @@ function component.invoke(addr, operation, ...)
   checkArg(1, addr, "string")
   checkArg(2, operation, "string")
   if vcomponents[addr] then
---    kernel.log("vcomponent: " .. addr .. " " .. operation)
     if vcomponents[addr][operation] then
       return vcomponents[addr][operation](...)
     end
