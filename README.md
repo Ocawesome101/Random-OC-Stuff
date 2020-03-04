@@ -1,7 +1,7 @@
 # Random-OC-Stuff
 Random one-off OpenComputers scripts and stuff.
 
-#### Virtual-Component
+#### Virtual-Component/vcomponent.lua
 
 A fairly simple vcomponent API that adds `component.connect` and `component.remove` for managing virtual components.
 
