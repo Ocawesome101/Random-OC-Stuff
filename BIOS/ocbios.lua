@@ -28,7 +28,7 @@ local pc      = computer
 pc.setArchitecture("Lua 5.3")
 local eeprom  = comp.proxy(comp.list("eeprom", true)())
 -- configuration IDs
-local _ID_EXPOSE_TERM,_ID_BOOT_ADDR,_ID_SHOW_LOGO, _ID_MENU_TIME = 1, 2, 3, 4
+local _ID_EXPOSE_TERM,_ID_BOOT_ADDR, _ID_MENU_TIME = 1, 2, 4
 local string = string
 local function loadconfig()
   local data = eeprom.getData()
@@ -128,22 +128,19 @@ if config[_ID_EXPOSE_TERM] == "true" then
 end
 
 local timeout = config[_ID_MENU_TIME] or 5
-local splash = config[_ID_SHOW_LOGO]
 local fg = 0xDC0000
 gsfg(fg)
 local w, h = gpu.getResolution()
 gpu.fill(1, 1, w, h, " ")
-if splash then
-  gs(1, 1, "┏━━━━┓")
-  gs(1, 2, "┃ ╭╮ ┃")
-  gs(1, 3, "┃ ╰╯ ┃")
-  gs(1, 4, "┗━━━━┛")
-  gsfg(0xFFFFFF)
-  gs(8, 2, "OC-BIOS version 0.1.0")
-  gs(8, 3, "Copyright (c) 2020 Ocawesome101, GNU GPLv3.")
-  local total, free = pc.totalMemory(), pc.freeMemory()
-  gs(1, 5, string.format("\n%dK total, %dK free\n\n", total // 1024, free // 1024))
-end
+gs(1, 1, "┏━━━━┓")
+gs(1, 2, "┃ ╭╮ ┃")
+gs(1, 3, "┃ ╰╯ ┃")
+gs(1, 4, "┗━━━━┛")
+gsfg(0xFFFFFF)
+gs(8, 2, "OC-BIOS version 0.1.0")
+gs(8, 3, "Copyright (c) 2020 Ocawesome101, GNU GPLv3.")
+local total, free = pc.totalMemory(), pc.freeMemory()
+gs(1, 5, string.format("\n%dK total, %dK free\n\n", total // 1024, free // 1024))
 
 local function pad(s, w)
   s = s:sub(1, w)
@@ -241,18 +238,19 @@ local function prompt()
 end
 
 local function config_menu()
-  local items = {
-    "Set menu timeout",
-    "Toggle logo on boot",
-    "Clear boot address",
-    "Exit"
-  }
+  local items
   while true do
+    items = {
+      "Set menu timeout",
+      "Expose term API ("..tostring(config[_ID_EXPOSE_TERM])..")",
+      "Clear boot address",
+      "Exit"
+    }
     local i = menu(items, "OC-BIOS Settings")
     if i == items[1] then
       config[_ID_MENU_TIME] = tonumber(prompt()) or timeout
     elseif i == items[2] then
-      config[_ID_BOOT_LOGO] = not config[_ID_BOOT_LOGO]
+      config[_ID_EXPOSE_TERM] = not config[_ID_EXPOSE_TERM]
     elseif i == items[3] then
       config[_ID_BOOT_ADDR] = nil
     elseif i == items[4] then
